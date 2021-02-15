@@ -1,13 +1,41 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import ItemList from '../src/component/ItemList';
+import { Divider, Header } from 'semantic-ui-react';
 
 export default function Home() {
+  //상품 리스트 관리용 state
+  const [list, setList] = useState([]);
+  //화장품 데이터 api 
+  const API_URL = "http://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline";
+  
+  //api 데이터 불러오기 함수
+  function getData() {
+    axios.get(API_URL)
+    .then(res => {
+      console.log(res.data);
+      setList(res.data);
+    })
+  }
+
+  useEffect(() => {
+    getData();
+
+  }, []);
+
   return (
     <div>
       <Head>
         <title>HOME | nextjs튜토리얼</title>
       </Head>
-      create-next-app111 !!!
+      <Header as="h3" style={{ paddingTop: 40 }}>베스트 상품</Header>
+      <Divider />
+      <ItemList list={list.slice(0, 9)} />
+      <Header as="h3" style={{ paddingTop: 40 }}>신상품</Header>
+      <Divider />
+      <ItemList list={list.slice(9)} />
     </div>
   )
 }
