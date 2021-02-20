@@ -3,11 +3,14 @@ import styles from '../styles/Home.module.css'
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ItemList from '../src/component/ItemList';
-import { Divider, Header } from 'semantic-ui-react';
+import { Divider, Header, Loader } from 'semantic-ui-react';
 
 export default function Home() {
   //상품 리스트 관리용 state
   const [list, setList] = useState([]);
+  // 페이지 로딩 시 로딩 인디케이터 용 state
+  const [isLoading, setIsLoading] = useState(true);   
+
   //화장품 데이터 api 
   const API_URL = "http://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline";
   
@@ -17,6 +20,8 @@ export default function Home() {
     .then(res => {
       console.log(res.data);
       setList(res.data);
+      // api호출이 완료되면 로딩을 false로.
+      setIsLoading(false);
     })
   }
 
@@ -29,13 +34,25 @@ export default function Home() {
     <div>
       <Head>
         <title>HOME | nextjs튜토리얼</title>
+        <meta name="description" content="여기가 홈입니다."></meta>
       </Head>
-      <Header as="h3" style={{ paddingTop: 40 }}>베스트 상품</Header>
-      <Divider />
-      <ItemList list={list.slice(0, 9)} />
-      <Header as="h3" style={{ paddingTop: 40 }}>신상품</Header>
-      <Divider />
-      <ItemList list={list.slice(9)} />
+      {isLoading && (
+        <div style={{ padding: '300px 0'}}>
+          <Loader inline="centered" active>
+            Loading
+          </Loader>
+        </div>
+      )}
+      {!isLoading && (
+        <>
+          <Header as="h3" style={{ paddingTop: 40 }}>베스트 상품</Header>
+          <Divider />
+          <ItemList list={list.slice(0, 9)} />
+          <Header as="h3" style={{ paddingTop: 40 }}>신상품</Header>
+          <Divider />
+          <ItemList list={list.slice(9)} />
+        </>
+      )}
     </div>
   )
 }
