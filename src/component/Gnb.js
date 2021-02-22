@@ -44,9 +44,11 @@ export default function Gnb() {
         onClick={goLink}
       />
       <Menu.Item
-        name='friends'
-        active={activeItem === 'friends'}
-        onClick={goLink}
+        name='Contact Us'
+        active={activeItem === 'contact'}
+        onClick={() => {
+          router.push('/contact');
+        }}
       />
     </Menu>
   )

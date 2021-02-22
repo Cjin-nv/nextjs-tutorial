@@ -5,7 +5,7 @@ import Head from 'next/head';
 // import { Loader } from 'semantic-ui-react';
 import Item from '../../src/component/Item';
 
-const Post = ({ item }) => {
+const Post = ({ item, name }) => {
 
   return (
     <>
@@ -15,6 +15,7 @@ const Post = ({ item }) => {
             <title>{item.name}</title>
             <meta name="description" content={item.description}></meta>
           </Head>
+          {name} 환경입니다.
           <Item item={item} />
         </>
       )}
@@ -24,6 +25,7 @@ const Post = ({ item }) => {
 
 export default Post;
 
+//아래 내부는 브라우저가 아닌, nodejs사이드에서 동작.
 export async function getServerSideProps(context) {
   //상세 상품의 아이디 (주소표시줄의 번호를 의미)
   const id = context.params.id;
@@ -35,6 +37,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       item: data,
+      name: process.env.name,
     },
   };
 }
@@ -64,6 +67,56 @@ pre-rendering에는 아래와 같이 두 가지 방법이 있다.
 - CDN에 캐시되지 않아서 조금 느릴 수 있다
 - 그러나 서버 사이드 렌더링은 항상 페이지가 최신 상태를 유지
 
+*/
 
 
-*/ 
+/**
+ *  old page.... (SSR 입히기 전)
+ * / 
+
+
+// import axios from 'axios';
+// import { useRouter } from 'next/router'
+// import { useEffect, useState } from 'react';
+// import { Loader } from 'semantic-ui-react';
+// import Item from '../../src/component/Item';
+
+// const Post = () => {
+//   const router = useRouter();
+//   const { id } = router.query;
+//   const [item, setItem] = useState({});
+//   const [isLoading, setIsLoading] = useState(true);
+//   const API_URL = `http://makeup-api.herokuapp.com/api/v1/products/${id}.json`;
+  
+//   function getData() {
+//     axios.get(API_URL)
+//     .then(res => {
+//       setItem(res.data);
+//       setIsLoading(false);
+//     });
+//   }
+//   useEffect(() => {
+//     if(id && id > 0) {
+//       getData();
+//     } 
+
+//   }, [id]);
+
+//   return (
+//     <>
+//       {isLoading ? (
+//         <div style={{ padding: '300px 0'}}>
+//         <Loader active inline="centered">
+//           Loading
+//         </Loader>
+//         </div>
+//       ) : (
+//         <Item item={item} />
+//       )}
+//     </>
+//   )
+// }
+
+// export default Post;
+
+*/

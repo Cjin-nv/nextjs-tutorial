@@ -12,7 +12,9 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);   
 
   //화장품 데이터 api 
-  const API_URL = "http://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline";
+  // const API_URL = "http://makeup-api.herokuapp.com/api/v1/products.json?brand=maybelline";
+  //browser환경이므로 환경변수를 이렇게 사용함.
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   
   //api 데이터 불러오기 함수
   function getData() {
