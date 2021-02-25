@@ -1,11 +1,23 @@
 import axios from 'axios';
 import Head from 'next/head';
-// import { useRouter } from 'next/router'
-// import { useEffect, useState } from 'react';
-// import { Loader } from 'semantic-ui-react';
+import { useRouter } from 'next/router';
+import { Loader } from 'semantic-ui-react';
 import Item from '../../src/component/Item';
+import { useEffect, useState } from 'react';
 
 const Post = ({ item, name }) => {
+  const router = useRouter();
+
+  //next/Router의 isFallback을 사용하여, 초기 페이지 로딩 시, 빈 공백 대신 로딩화면이 뜨도록 만들어줌 
+  if (router.isFallback) {
+    return (
+      <div style={{ padding: '100px 0'}}>
+        <Loader active inline="centered">
+          Loading
+        </Loader>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -20,19 +32,30 @@ const Post = ({ item, name }) => {
         </>
       )}
     </>
-  )
-}
+  );
+};
 
 export default Post;
 
 //sttic path 사용하기
 export async function getStaticPaths() {
+  const apiUrl = process.env.apiUrl;
+  const res = await axios.get(apiUrl);
+  const data = res.data;
+
   return {
-    paths: [
-      { params: { id: '740' } },
-      { params: { id: '730' } },
-      { params: { id: '729' } },
-    ],
+    // test용으로 상위 3개만 static파일 생성해보기.
+    // paths: [
+    //   { params: { id: '740' } },
+    //   { params: { id: '730' } },
+    //   { params: { id: '729' } },
+    // ],
+    // 전체 리스트를 static파일로 만들기
+    paths: data.map(item => ({
+      params: {
+        id: item.id.toString(),
+      }
+    })),
     fallback: true
     // fallback이 false면, 없는 페이지는 대응을 하지 않아, 404 에러 화면이 뜬다.
     // fallback이 true면, 최초에 페이지 로드 시, (파라미터로 넘기지 않은 것들에 대해)
@@ -58,5 +81,3 @@ export async function getStaticProps(context) {
     },
   };
 }
-
-
